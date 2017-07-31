@@ -2,17 +2,26 @@
 #include "SFML/Graphics.hpp"
 #include "maze.h"
 #include "tile.h"
+#include <vector>
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(600, 600), "TEST");
-	sf::Texture texture;
-	tile tile;
+	Textures t_tile;
+	if (!(t_tile.t_top.loadFromFile("Resources/Top.png"))) {
+	}
+	if (!(t_tile.t_bot.loadFromFile("Resources/Bottom.png"))) {
+	}
+	if (!(t_tile.t_rgt.loadFromFile("Resources/Left.png"))) {
+	}
+	if (!(t_tile.t_lft.loadFromFile("Resources/Right.png"))) {
+	}
+	std::vector<tile> tile_vec;
+	for (int i = 0; i < 10; i++) {
+		tile_vec.push_back(tile(t_tile, i * 35, 0));
+		tile_vec.at(i).setTile(true, true, false, false);
+	}
 	bool direction = true;
 	maze maze;
-	if (!texture.loadFromFile("Resources/Test.png")) {
-	std::cout << "Error loading resources" << std::endl;
-	}
-	sf::Sprite sprite(texture);
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -30,22 +39,24 @@ int main() {
 				case 0:
 					std::cout << "LMB pressed" << std::endl;
 					if (direction) {
-						sprite.setPosition((sf::Vector2f) sf::Mouse::getPosition(window));
 					}
 					break;
 				case 1:
 					std::cout << "RMB pressed" << std::endl;
 					if (!direction) {
-						sprite.setPosition((sf::Vector2f) sf::Mouse::getPosition(window));
 					}
 					break;
 				}
 			}
 		}
 		window.clear();
-		tile.draw(&window);
 		//Drawing here
-		window.display();
+		for (std::vector<tile>::iterator it = tile_vec.begin(); it != tile_vec.end(); ++it) {
+			std::cout << "iteration";
+			it->draw(&window);
+		}
+		window.display();		
+		std::cin.get();
 	}
 	return 0;
 }

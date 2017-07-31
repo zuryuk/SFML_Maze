@@ -6,7 +6,7 @@ maze::maze()
 {
 	std::cout << "#";
 	for (int i = 0; i < 8; i++) {
-		std::cout << "-";
+		std::cout << "=";
 	}
 	std::cout <<  "#" << std::endl;
 	for (int j = 0; j < 8; j++) {
@@ -66,7 +66,7 @@ maze::maze()
 	}
 	std::cout << "#";
 	for (int i = 0; i < 8; i++) {
-		std::cout << "-";
+		std::cout << "=";
 	}
 	std::cout << "#" << std::endl;
 }
