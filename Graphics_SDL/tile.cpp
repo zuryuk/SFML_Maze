@@ -1,5 +1,6 @@
 #include "tile.h"
-
+struct cell {
+};
 
 
 tile::tile()
@@ -18,7 +19,7 @@ tile::tile(Textures &t,int x, int y)
 	s_bot.setPosition(x, y);
 	s_rgt.setPosition(x, y);
 	s_lft.setPosition(x, y);
-	top = false; bottom = false; right = false; left = false;
+	visited = false;
 
 }
 
@@ -27,26 +28,49 @@ tile::~tile()
 {
 }
 
-void tile::draw(sf::RenderWindow *window)
-{ 
-	if (top) {
+void tile::draw(sf::RenderWindow *window){
+	if (walls >= WALL_NORTH) {
 		window->draw(s_top);
 	}
-	if (bottom) {
-		window->draw(s_bot);
-	}
-	if (right) {
+	if (walls >= WALL_EAST != 0) {
 		window->draw(s_rgt);
-	}
-	if (left) {
+	}	
+	if (walls >= WALL_WEST != 0) {
 		window->draw(s_lft);
+	}	
+	if (walls >= WALL_SOUTH != 0) {
+		window->draw(s_bot);
 	}
 }
 
-void tile::setTile(bool b_top, bool b_bot, bool b_rgt, bool b_lft)
+void tile::setTile(int w)
 {
-	top = b_top;
-	bottom = b_bot;
-	right = b_rgt;
-	left = b_lft;
+	walls = w & WALL_ALL;
+}
+
+void tile::removeWall(int w) {
+	if (w != WALL_NORTH && w != WALL_EAST && w != WALL_SOUTH && w != WALL_WEST)
+		throw std::string("Illegal wall argument");
+	walls &= !w;
+}
+
+void tile::setPos(int x, int y)
+{
+	pos_x = x;
+	pos_y = y;
+}
+bool tile::isVisited() {
+	return visited;
+}
+bool tile::getWalls(){
+	return walls == WALL_ALL;
+}
+void tile::toggleVisited() {
+	visited = !visited;
+}
+int tile::getX() {
+	return pos_x;
+}
+int tile::getY() {
+	return pos_y;
 }
