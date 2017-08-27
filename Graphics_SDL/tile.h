@@ -20,9 +20,6 @@ public:
 	void removeWall(int w);
 	void setPos(int x, int y);
 	bool isVisited();
-	void toggleVisited();
-	int getX();
-	int getY();
 	bool getWalls();
 private:
 	int walls;

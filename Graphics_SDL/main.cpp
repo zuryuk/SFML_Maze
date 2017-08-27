@@ -3,10 +3,10 @@
 #include "tile.h"
 #include <time.h>
 #include <vector>
-
+#include <Windows.h>
 #define TILE_SIZE 40
 enum DIR { NORTH, SOUTH, WEST, EAST};
-struct COORD {
+struct COORDINATES {
 	int x;
 	int y;
 } trail_crd;
@@ -20,7 +20,7 @@ int main() {
 	//Maze generation
 	int curX;
 	int curY;
-	std::vector<COORD> trail;
+	std::vector<COORDINATES> trail;
 	std::vector<DIR> live;
 	//Textures
 	sf::RenderWindow window(sf::VideoMode(600, 600), "TEST");
@@ -77,29 +77,39 @@ int main() {
 			if (maze[curY][curX - 1].getWalls()) 
 				live.push_back(WEST);
 		if (curX < COLS) 
-			if (maze[curX + 1][curY].getWalls()) 
+			if (maze[curY][curX+1].getWalls()) 
 				live.push_back(EAST);
 		std::cout << "Live size: "<< live.size() << std::endl;
 		for (auto &i : live) {
 			std::cout << i;
 		}
-		system("pause");
-		if (live.size() != 0) {
+		if (live.empty() == false) {
+			trail_crd.x = curX;
+			trail_crd.y = curY;
+			trail.push_back(trail_crd);
 			switch (live[rand() % live.size()]) {
 			case 0:
+				maze[curY][curX].removeWall(WALL_NORTH);
+				maze[curY - 1][curX].removeWall(WALL_SOUTH);
 				curY--;
 				break;
 			case 1:
+				maze[curY][curX].removeWall(WALL_SOUTH);
+				maze[curY+1][curX].removeWall(WALL_NORTH);
 				curY++;
 				break;
 			case 2:
+				maze[curY][curX].removeWall(WALL_EAST);
+				maze[curY][curX-1].removeWall(WALL_WEST);
 				curX--;
 				break;
 			case 3:
+				maze[curY][curX].removeWall(WALL_WEST);
+				maze[curY][curX+1].removeWall(WALL_EAST);
 				curX++;
 				break;
 			}
-			x_sprite.setPosition(100 + TILE_SIZE * curX, 100 + TILE_SIZE * curY);
+
 		}
 		else {
 			trail.pop_back();
@@ -108,6 +118,8 @@ int main() {
 				curY = trail.back().y;
 			}
 		}
+		Sleep(50);
+		x_sprite.setPosition(100 + TILE_SIZE * curX, 100 + TILE_SIZE * curY);
 	}
 	bool direction = true;
 	while (window.isOpen()) {
